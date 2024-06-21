@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.BookingMapper">
+
+	<select id="getBooking" parameterType="string"
+		resultType="com.example.domain.BookingDTO">
+		SELECT * FROM booking WHERE bo_num = #{bo_num}
+	</select>
+
+	<select id="getAllBooking"
+		resultType="com.example.domain.BookingDTO">
+		SELECT * FROM booking
+	</select>
+
+	<insert id="addBooking"
+		parameterType="com.example.domain.BookingDTO">
+		INSERT INTO booking (bo_num, email_id, ro_type, ac_id, checkin_day,
+		checkout_day, status, payment_code, reg_date)
+		VALUES (#{bo_num}, #{email_id}, #{ro_type}, #{ac_id}, #{checkin_day},
+		#{checkout_day}, #{status}, #{payment_code}, #{reg_date})
+	</insert>
+
+	<update id="updateBooking"
+		parameterType="com.example.domain.BookingDTO">
+		UPDATE booking SET email_id = #{email_id}, ro_type = #{ro_type}, ac_id =
+		#{ac_id},
+		checkin_day = #{checkin_day}, checkout_day = #{checkout_day}, status = #{status},
+		payment_code = #{payment_code}, reg_date = #{reg_date} WHERE bo_num =
+		#{bo_num}
+	</update>
+
+	<delete id="deleteBooking" parameterType="string">
+		DELETE FROM booking WHERE bo_num = #{bo_num}
+	</delete>
+
+	<select id="getBusinessBookingsByEmail"
+		parameterType="String" resultType="com.example.domain.BookingConfirmDTO">
+    	select bo_num, room_num, checkin_day, checkout_day, tel, m.email_id, status, b.ac_id, name, ac_title, status_explain
+		from booking b
+		join accommodation a on b.ac_id = a.ac_id
+		join member m on b.email_id = m.email_id
+		join booking_status_code c on b.status = c.status_code
+		where a.email_id = #{email_id}
+	</select>
+	
+	<update id="updateBookingStatus" parameterType="com.example.domain.BookingUpdateDTO">
+	    UPDATE booking
+	    SET status = #{status}
+	    WHERE bo_num = #{bo_num}
+	</update>
+	
+	<delete id="deleteBookingcancel" parameterType="com.example.domain.BookingcancelDTO">
+	    DELETE FROM booking
+	    WHERE bo_num = #{bo_num}
+	</delete>
+	
+	<insert id="insertBooking" parameterType="com.example.domain.BookingDTO">
+		INSERT INTO booking (bo_num, email_id, room_num, ac_id, checkin_day,
+		checkout_day, status, payment_code, reg_date)
+		VALUES (bo_num_seq.NEXTVAL, #{email_id}, #{room_num}, #{ac_id}, #{checkin_day}, #{checkout_day}, #{status}, #{payment_code}, #{reg_date})
+	</insert>
+	
+	<select id="getBusinessBookingsByEmailcheck"
+		parameterType="String" resultType="com.example.domain.CheckDTO">
+		SELECT
+			b.bo_num as bo_num, 
+		    b.room_num as room_num, 
+		    b.checkin_day as checkin_day, 
+		    b.checkout_day as checkout_day, 
+		    b.email_id as email_id, 
+		    b.ac_id as ac_id, 
+		    a.ac_title as ac_title, 
+		    r.ro_name as ro_name,
+		    r.room_price as room_price,
+		    b.status as status
+		FROM booking b
+		JOIN accommodation a ON b.ac_id = a.ac_id
+		JOIN room r ON b.room_num = r.room_num
+		JOIN member m ON b.email_id = m.email_id
+		WHERE b.email_id LIKE #{email_id}
+	</select>
+</mapper>
