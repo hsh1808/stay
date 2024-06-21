@@ -21,7 +21,7 @@ public class RootConfig {
 	 @Bean
 	  public HikariDataSource dataSource() 
 	  {
-	    HikariConfig hikariConfig = new HikariConfig();
+	    HikariConfig hikariConfig = new HikariConfig(); 
 	    
 //	    hikariConfig.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 //	    hikariConfig.setDriverClassName("oracle.jdbc.OracleDriver");
